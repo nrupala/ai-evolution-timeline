@@ -1,0 +1,2 @@
+##Scope of AI-evolution-timeline for transformers to Agentic
+Build an interactive timeline visualization of AI evolution from Transformers (2017) through LLMs to agentic AI (2024-2025+), including key milestones like multi-agent systems, SLMs, AI orchestration, and Perplexity's agent browsers — deploy as a shareable website with clickable events revealing architecture details and source citations
