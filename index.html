@@ -1,120 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Evolution Timeline (2017–2025+)</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Evolution Timeline</title>
   <script src="https://cdn.plot.ly/plotly-2.28.0.min.js"></script>
   <style>
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-    #container {
-      display: flex;
-      height: 100vh;
-    }
-    #timeline {
-      flex: 3;
-      background: #f8f9fa;
-    }
-    #sidebar {
-      flex: 1;
-      padding: 20px;
-      border-left: 1px solid #ddd;
-      overflow-y: auto;
-    }
-    #sidebar h2 {
-      margin-top: 0;
-    }
-    .citation {
-      font-size: 0.9em;
-      color: #555;
-    }
+    body { font-family: sans-serif; display: flex; height: 100vh; margin: 0; }
+    #timeline { flex: 3; }
+    #sidebar { flex: 1; padding: 20px; border-left: 1px solid #ddd; overflow-y: auto; }
   </style>
 </head>
 <body>
-  <div id="container">
-    <div id="timeline"></div>
-    <div id="sidebar">
-      <h2>AI Evolution Timeline</h2>
-      <p>Click an event on the chart to see architecture details and citations.</p>
-      <div id="details"></div>
-    </div>
+  <div id="timeline"></div>
+  <div id="sidebar">
+    <h2>Details</h2>
+    <div id="details">Click an event to view details.</div>
   </div>
 
+  <script src="data.js"></script>
   <script>
-    // Paste TIMELINE_DATA definition here (or load as separate data.js)
-    //   (see code block above)
-    window.data = window.TIMELINE_DATA || [];
+    const data = window.TIMELINE_DATA;
+    const categories = ["architecture", "model", "agent", "product"];
+    const traces = categories.map(cat => ({
+      x: data.filter(d => d.category === cat).map(d => d.year),
+      y: data.filter(d => d.category === cat).map(d => cat),
+      mode: 'markers',
+      name: cat,
+      customdata: data.filter(d => d.category === cat).map(d => d.id)
+    }));
 
-    // Build plot
-    const dataGroups = [
-      "architecture",
-      "model",
-      "agent",
-      "product"
-    ];
+    Plotly.newPlot('timeline', traces, { title: 'AI Evolution Timeline' });
 
-    const traces = dataGroups.map(group => {
-      const points = data.filter(d => d.category === group);
-      return {
-        x: points.map(d => d.year),
-        y: points.map(d => group),
-        type: "scatter",
-        mode: "markers+text",
-        text: points.map(d => `${d.year}: ${d.event}`),
-        textposition: "top center",
-        name: group,
-        marker: {
-          size: 12,
-          symbol: "circle"
-        },
-        customdata: points.map(d => d.id)
-      };
+    document.getElementById('timeline').on('plotly_click', data => {
+      const id = data.points[0].customdata;
+      const item = window.TIMELINE_DATA.find(x => x.id === id);
+      document.getElementById('details').innerHTML = `<h3>${item.event}</h3><p>${item.description}</p>`;
     });
-
-    const layout = {
-      title: "AI Evolution Timeline (2017–2025+)",
-      xaxis: {
-        title: "Year",
-        range: [2016.5, 2025.5],
-        dtick: 1,
-        showgrid: true,
-        gridcolor: "#eee"
-      },
-      yaxis: {
-        title: "Category",
-        type: "category",
-        showgrid: true,
-        gridcolor: "#eee"
-      },
-      hovermode: "closest",
-      margin: { t: 50, b: 60, l: 60, r: 200 }
-    };
-
-    Plotly.newPlot("timeline", traces, layout);
-
-    // On click: show details in sidebar
-    document.getElementById("timeline").on(
-      "plotly_click",
-      function(d) {
-        const point = d.points[0];
-        const eventId = point.customdata;
-        const item = data.find(d => d.id === eventId);
-        const details = document.getElementById("details");
-        details.innerHTML = `
-          <h3>${item.year}: ${item.event}</h3>
-          <p><strong>Category:</strong> ${item.category}</p>
-          <p><strong>Description:</strong> ${item.description}</p>
-          <p><strong>Architecture:</strong> ${item.architecture}</p>
-          <p><strong>Citations:</strong></p>
-          <ul>
-            ${item.citations.map(c => `>${c}</li>`).join("")}
-          </ul>
-        `;
-      }
-    );
   </script>
 </body>
 </html>
