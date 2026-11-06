@@ -45,5 +45,8 @@ See `CONTRIBUTING.md`. Draft PR → owner merges; no direct pushes to `main`.
 
 ## License
 
-The license for this repository is not yet declared — flagged for the owner's
-call (no LICENSE file ships; nothing here relicenses anything).
+Apache-2.0 — see `LICENSE`.
+
+## Security
+
+See `SECURITY.md` for how to report a vulnerability privately.
