@@ -6,8 +6,9 @@ Direct pushes to `main` are retired. Every change lands through this flow:
 
 1. Open a **draft PR** from a feature branch.
 2. **Owner merges** — the repository owner merges; nobody merges their own PR.
-   (No automated test suite exists in this repo, so the green-merge check is the
-   version guard on release tags plus owner review.)
+   (The automated test suite — `node --test tests/timeline.test.mjs`, run by
+   CI on every push and pull request — must be green, alongside the version
+   guard on release tags plus owner review.)
 3. Every PR adds a **CHANGELOG entry under `## [Unreleased]`** and bumps semver:
    patch = fix/chore, minor = feature, major = breaking.
 4. Merge commits reference the PR number.
@@ -22,6 +23,4 @@ CI fails the build if the tag does not match `VERSION`.
 ## License
 
 By contributing, you agree your contributions are offered under the same terms
-as the repository's declared license. Note: the repository's license is
-currently undeclared — the owner will confirm it before accepting licensed
-contributions.
+as the repository's declared license (Apache-2.0, see `LICENSE`).
